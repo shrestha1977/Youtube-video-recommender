@@ -2,7 +2,7 @@ import streamlit as st
 from googleapiclient.discovery import build
 
 # --- YOUTUBE API CONFIG ---
-API_KEY = "AIzaSyC61OdgBAQdDjP-zK0we9Uw71ElG2VF6yw"  
+API_KEY = st.secrets["openai_api_key"]  
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
 
