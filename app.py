@@ -26,7 +26,7 @@ st.sidebar.title("🎯 Options")
 search_mode = st.sidebar.radio("Search Mode", ["🔘 By Category", "🆓 Custom Search"])
 categories = ["🎓 Education", "🧠 Tech", "🎮 Gaming", "🎨 Design", "🎶 Music", "🌍 Travel"]
 st.sidebar.markdown("---")
-st.sidebar.info("🔐 Ensure your API key is working.\n🌐 Internet is required.")
+st.sidebar.info("🎬 Top Videos at Your Fingertips — Just One Topic Away! 🔎\n🕵️‍♂️ AI-Powered Topic Search — Explore YouTube Smarter, Not Harder! 🤖")
 
 # --- MAIN HEADER ---
 st.markdown("""
