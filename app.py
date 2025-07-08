@@ -27,7 +27,8 @@ def load_lottieurl(url: str):
         return None
     return r.json()
 
-lottie_youtube = load_lottieurl("https://app.lottiefiles.com/share/cd8cd16e-b4fa-427b-b0fa-aacadf01b2f3")
+lottie_youtube = load_lottieurl("https://lottie.host/44463e2d-b591-453a-a5a5-631dbfb360fc/rGnH2Q7xKk.json
+")
 
 # --- PAGE CONFIG ---
 st.set_page_config(page_title="🎥 Video Recommender", layout="wide")
