@@ -1,2 +1,3 @@
-google-api-python-client
 streamlit
+google-api-python-client
+streamlit-lottie
