@@ -1,14 +1,12 @@
 import streamlit as st
 from googleapiclient.discovery import build
-from streamlit_lottie import st_lottie
-import requests
 
 # --- CONFIG ---
-API_KEY = "AIzaSyC61OdgBAQdDjP-zK0we9Uw71ElG2VF6yw"  # Replace with your real API key
+API_KEY = "AIzaSyC61OdgBAQdDjP-zK0we9Uw71ElG2VF6yw"  
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
 
-# --- FUNCTION TO SEARCH VIDEOS ---
+# --- FUNCTION TO SEARCH YOUTUBE VIDEOS ---
 def search_youtube_videos(query):
     youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey=API_KEY)
     request = youtube.search().list(
@@ -20,50 +18,40 @@ def search_youtube_videos(query):
     response = request.execute()
     return response.get("items", [])
 
-# --- LOAD LOTTIE ---
-def load_lottieurl(url: str):
-    r = requests.get(url)
-    if r.status_code != 200:
-        return None
-    return r.json()
-
-lottie_youtube = load_lottieurl("https://lottie.host/44463e2d-b591-453a-a5a5-631dbfb360fc/rGnH2Q7xKk.json")
-
 # --- PAGE CONFIG ---
-st.set_page_config(page_title="🎥 Video Recommender", layout="wide")
+st.set_page_config(page_title="🎥 YouTube Video Recommender", layout="wide")
 
-# --- UI HEADER ---
-st_lottie(lottie_youtube, speed=1, height=250, key="intro")
+# --- HEADER ---
 st.title("🎬 YouTube Video Recommender")
-st.markdown("✨ _Explore YouTube videos by category or custom search!_")
+st.markdown("Type a topic or select a category below to explore top YouTube videos.")
 
-# --- CATEGORY SELECTOR ---
-category = st.selectbox("📂 Choose a Category", [
-    "📌 Choose", "🧠 Tech", "🩺 Health", "🎶 Music", "🎓 Education", 
-    "🎨 Design", "🎮 Gaming", "🌍 Travel", "🆓 Custom Topic"
-])
+# --- CATEGORY OR CUSTOM TOPIC ---
+categories = ["🎓 Education", "🧠 Tech", "🎮 Gaming", "🎨 Design", "🎶 Music", "🌍 Travel", "🆓 Custom"]
+category = st.selectbox("Choose a category or select 'Custom' to enter your own topic", categories)
 
-# --- CUSTOM TOPIC ---
-if category == "🆓 Custom Topic":
-    topic = st.text_input("🔍 Enter your own topic")
+# --- CUSTOM INPUT ---
+if category == "🆓 Custom":
+    topic = st.text_input("🔍 Enter your own topic:")
 else:
-    topic = category.split(" ", 1)[1] if category != "📌 Choose" else ""
+    topic = category.split(" ", 1)[1]  # Extract text after emoji
 
-# --- SEARCH BUTTON ---
+# --- SEARCH AND DISPLAY VIDEOS ---
 if topic:
     with st.spinner("🔎 Searching YouTube..."):
-        videos = search_youtube_videos(topic)
-        if videos:
-            for video in videos:
-                title = video["snippet"]["title"]
-                channel = video["snippet"]["channelTitle"]
-                video_id = video["id"]["videoId"]
-                video_url = f"https://www.youtube.com/watch?v={video_id}"
+        try:
+            videos = search_youtube_videos(topic)
+            if videos:
+                for video in videos:
+                    title = video["snippet"]["title"]
+                    channel = video["snippet"]["channelTitle"]
+                    video_id = video["id"]["videoId"]
+                    video_url = f"https://www.youtube.com/watch?v={video_id}"
 
-                st.markdown("#### 📺 " + title)
-                st.write(f"🧑‍🏫 **Channel:** {channel}")
-                st.write(f"🔗 [Watch on YouTube]({video_url})")
-                st.video(video_url)
-                st.markdown("---")
-        else:
-            st.warning("No results found.")
+                    st.markdown(f"### 📺 {title}")
+                    st.write(f"🧑‍🏫 Channel: {channel}")
+                    st.video(video_url)
+                    st.markdown("---")
+            else:
+                st.warning("No results found. Try a different topic.")
+        except Exception as e:
+            st.error(f"An error occurred: {e}")
